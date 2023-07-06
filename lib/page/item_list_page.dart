@@ -143,7 +143,15 @@ class _ItemListPageState extends State<ItemListPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: ((context) => NewItemPage(
+                              product: snapshot,
+                            )),
+                      ),
+                    );
+                  },
                   icon: Icon(
                     Icons.edit,
                     color: Colors.orange,

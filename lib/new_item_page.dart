@@ -12,6 +12,9 @@ import 'package:firebase_storage/firebase_storage.dart' as firabase_storage;
 import 'package:http/http.dart' as http;
 
 class NewItemPage extends StatefulWidget {
+  var product;
+  NewItemPage({Key key, this.product}) : super(key: key);
+
   @override
   State<NewItemPage> createState() => _NewItemPageState();
 }
@@ -32,8 +35,18 @@ class _NewItemPageState extends State<NewItemPage> {
 
   @override
   void initState() {
-    //deleteVegetable();
     super.initState();
+    setDefaultValue();
+  }
+
+  setDefaultValue() {
+    if(widget.product != null) {
+      setState(() {
+        _itemNameController.text = widget.product['itemName'];
+        _itemPriceController.text = widget.product['itemPrice'];
+        defaultImageUrl = widget.product['itemImageUrl'][0];
+      });
+    }
   }
 
   @override
@@ -174,7 +187,7 @@ class _NewItemPageState extends State<NewItemPage> {
     //String imageUrl = await _uploadFile();
     await _uploadMultipleFiles(_itemNameController.text);
     print('Uploaded Image URL ' + imageUrls.length.toString());
-    await FirebaseFirestore.instance.collection('vegetables').add({
+    await FirebaseFirestore.instance.collection('vegetables').doc(widget.product.id).set({
       'itemName': _itemNameController.text,
       'itemPrice': _itemPriceController.text,
       'itemImageUrl': imageUrls,
@@ -230,7 +243,7 @@ class _NewItemPageState extends State<NewItemPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Vegetable Seller',
+          'New Product',
         ),
       ),
       body: SingleChildScrollView(
